@@ -1,9 +1,15 @@
 [package]
+authors = ["Scott MacDonald <scott@smacdo.com>"]
+categories = ["command-line-utilities", "games"]
+description = "Generate potential solutions for the NYT spelling bee game"
 edition = "2021"
+keywords = ["cli", "puzzle", "spellingbee", "games"]
+license = "Apache-2.0"
 name = "bumblebee"
-version = "0.1.0"
+readme = "README.md"
+repository = "https://github.com/smacdo/bumblebee"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+version = "0.2.0"
 
 [dependencies]
 clap = {version = "3.1", features = ["derive"]}
