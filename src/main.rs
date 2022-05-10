@@ -14,17 +14,17 @@
 // limitations under the License.
 ////////////////////////////////////////////////////////////////////////////////
 // TODO: Windows support since it doesn't have a builtin dictionary?
-use bumblebee::find_all;
+use spellingbee::find_all;
 use clap::Parser;
 use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
 use std::{fs::File, path::Path};
 
-const APP_SHORT_NAME: &str = "bumblebee";
+const APP_SHORT_NAME: &str = "spellingbee";
 
 /// Command line parameters.
 #[derive(Parser)]
-#[clap(name = "Bumblebee")]
+#[clap(name = "Spellingbee")]
 #[clap(author = "Scott MacDonald <scott@smacdo.com>")]
 #[clap(about = "Finds answers to the NYT spelling bee game", long_about = None)]
 struct CliParams {

@@ -5,9 +5,9 @@ description = "Generate potential solutions for the NYT spelling bee game"
 edition = "2021"
 keywords = ["cli", "puzzle", "spellingbee", "games"]
 license = "Apache-2.0"
-name = "bumblebee"
+name = "spellingbee"
 readme = "README.md"
-repository = "https://github.com/smacdo/bumblebee"
+repository = "https://github.com/smacdo/spellingbee"
 
 version = "0.2.0"
 
