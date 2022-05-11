@@ -17,6 +17,8 @@ const PANGRAM_SCORE_BOOST: i32 = 7;
 const SCORE_MIN_LENGTH: usize = 5;
 const WORD_MIN_LENGTH: usize = 4;
 
+/// Holds details for a word that is considered an answer to the spelling bee
+/// setup.
 #[derive(Debug, PartialEq)]
 pub struct Answer {
     pub word: String,
@@ -24,7 +26,7 @@ pub struct Answer {
     pub is_pangram: bool,
 }
 
-/// Find all valid answers given an iterable list of potential words.
+/// Finds all spelling bee answers from an iterable list of words.
 pub fn find_all<I, S>(words: I, required: char, extra: &str) -> Vec<Answer>
 where
     I: IntoIterator<Item = S>,
@@ -43,10 +45,30 @@ where
     answers
 }
 
-/// Test if the given word `word` is a valid answer to the problem. A word is
-/// considered a solution if it is at least four letters long, at least one
-/// character matches `required`, and the remaining letters match either
-/// `required` or one of the values in `extra`.
+/// Test if the given word is a valid answer to the spelling bee, and return
+/// scoring information if it is an answer. If the word is not an answer than
+/// `None` will be returned.
+///
+/// # Notes
+/// A word is considered an answer if it is at least four letters long, at least
+/// one character matches `required`, and the remaining letters match of the
+/// characters in `extra` or the required character. A pangram is when a
+/// word's letters match both the required character, and every character listed
+/// in `extra`.
+///
+/// Scoring is determined with the following rules:
+///     1. Words of length four are worth one point.
+///     2. Words longer than four letters are worth their length in points.
+///     3. A pangram word gets an additional seven points.
+///
+/// # Examples
+/// ```
+/// use spellingbee::check_word;
+/// assert!(check_word("loon", 'o', "unrlap").is_some());
+/// assert!(check_word("unpopular", 'o', "unrlap").unwrap().is_pangram);
+/// assert_eq!(7, check_word("pronoun", 'o', "unrlap").unwrap().score);
+/// assert!(check_word("foobar", 'o', "unrlap").is_none());
+/// ```
 pub fn check_word(word: &str, required: char, extra: &str) -> Option<Answer> {
     // Words must be at least four characters.
     if word.len() < WORD_MIN_LENGTH {
