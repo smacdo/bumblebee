@@ -14,8 +14,8 @@
 // limitations under the License.
 ////////////////////////////////////////////////////////////////////////////////
 // TODO: Windows support since it doesn't have a builtin dictionary?
-use spellingbee::find_all;
 use clap::Parser;
+use spellingbee::{find_all, Answer};
 use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
 use std::{fs::File, path::Path};
@@ -26,7 +26,7 @@ const APP_SHORT_NAME: &str = "spellingbee";
 #[derive(Parser)]
 #[clap(name = "Spellingbee")]
 #[clap(author = "Scott MacDonald <scott@smacdo.com>")]
-#[clap(about = "Finds answers to the NYT spelling bee game", long_about = None)]
+#[clap(about = "Finds answers to the spelling bee game.")]
 struct CliParams {
     /// Path to a dictionary file (one word per line).
     #[clap(short = 'd')]
@@ -44,12 +44,20 @@ fn main() {
 
     // Print the matching words or print any errors encountered when trying to
     // load the dictionary.
-    let words = find_all_with_dict(args.dict_path, args.required_char, &args.extra_chars);
+    let answers = find_all_with_dict(args.dict_path, args.required_char, &args.extra_chars);
 
-    match words {
-        Ok(words) => {
-            for w in words {
-                println!("{}", &w);
+    match answers {
+        Ok(mut answers) => {
+            // Print pangrams answers before all other answers, but make sure
+            // always show answers in order of descending score.
+            answers.sort_unstable_by_key(|a| -a.score);
+
+            for ans in answers.iter().filter(|&a| a.is_pangram) {
+                println!("* {:<2} {}", ans.score, ans.word);
+            }
+
+            for ans in answers.iter().filter(|&a| !a.is_pangram) {
+                println!("  {:<2} {}", ans.score, ans.word);
             }
         }
         Err(err) => {
@@ -67,7 +75,7 @@ fn find_all_with_dict<P: AsRef<Path>>(
     path: P,
     required: char,
     extra: &str,
-) -> std::io::Result<Vec<String>> {
+) -> std::io::Result<Vec<Answer>> {
     let raw_file = File::open(path)?;
     let file = BufReader::new(raw_file);
 
