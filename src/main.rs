@@ -26,7 +26,7 @@ const APP_SHORT_NAME: &str = "spellingbee";
 #[derive(Parser)]
 #[clap(name = "Spellingbee")]
 #[clap(author = "Scott MacDonald <scott@smacdo.com>")]
-#[clap(about = "Finds answers to the spelling bee game.")]
+#[clap(about = "Finds answers to the NYT spelling bee game.")]
 struct CliParams {
     /// Path to a dictionary file (one word per line).
     #[clap(short = 'd')]
